@@ -1,5 +1,11 @@
 # Creating Dashboards with Shiny
 
+[![RStudio Cloud](https://rstudio.cloud/94539adfa2edf8d33c806f481bae6b36.svg
+)](https://rstudio.cloud/project/1402758)
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ramnathv/live-webinar-shiny/master?urlpath=rstudio)
+
+
 ## Slides
 
 1. Introduction to the webinar and instructor (led by DataCamp TA).
