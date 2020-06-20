@@ -1,0 +1,85 @@
+---
+title: Layouts & Themes
+---
+
+```{r setup, include = FALSE}
+library(shiny)
+library(tidyverse)
+server <- function(input, output, session){
+  
+}
+```
+
+## Layouts
+
+### `sidebarLayout`
+
+![sidebar-layout](img/sidebar-layout.png)
+
+```{r}
+ui <- fluidPage(
+  titlePanel("Title"),
+  sidebarLayout(
+    sidebarPanel('Sidebar'),
+    mainPanel('Main')
+  )
+)
+shinyApp(ui, server)
+```
+
+### `tabsetPanel`
+
+![tabset-panel](img/tabset-panel.png)
+
+```{r}
+ui <- fluidPage(
+  titlePanel('Title'),
+  sidebarLayout(
+    sidebarPanel('Sidebar'),
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Tab 1"),
+        tabPanel("Tab 2")
+      )
+    )
+  )
+)
+shinyApp(ui, server)
+```
+
+### `navbarPage`
+
+![navbar-page](img/navbar-page.png)
+
+```{r}
+ui <- navbarPage(
+  "App Title",
+  tabPanel("Page 1"),
+  tabPanel("Page 2"),
+  tabPanel("Page 3")
+)
+shinyApp(ui, server)
+```
+
+## Themes
+
+![theme-selector](img/theme-selector.png)
+
+```{r}
+ui <- fluidPage(
+  titlePanel('Title'),
+  # Add `themeSelector` from `shinythemes` package
+  shinythemes::themeSelector(),
+  sidebarLayout(
+    sidebarPanel('Sidebar'),
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Tab 1"),
+        tabPanel("Tab 2")
+      )
+    )
+  )
+)
+shinyApp(ui, server)
+```
+

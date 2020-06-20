@@ -1,0 +1,92 @@
+---
+title: MoMa Data
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(shiny)
+```
+
+
+## Artists
+
+```{r}
+artists <- readr::read_csv('../data/Artists.csv') %>% 
+  janitor::clean_names()
+artists
+```
+
+
+```{r}
+artworks %>% 
+ filter(!is.na(artist)) %>% 
+ filter(date_acquired >= '2010-01-01') %>% 
+ filter(date_acquired <= '2020-01-01') %>% 
+ filter(classification == 'Paintings') %>% 
+ count(artist, sort = TRUE) %>%
+ mutate(artist = forcats::fct_reorder(artist, n)) %>% 
+ head(10) %>% 
+ ggplot(aes(x = artist, y = n)) +
+ geom_col() +
+ coord_flip()  
+```
+
+```{r}
+artists %>% 
+  filter(nationality == )
+```
+
+## Artworks
+
+```{r}
+artworks <- readr::read_csv('data/Artworks.csv') %>% 
+  janitor::clean_names()
+artworks
+```
+
+```{r}
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput('classification', 'Classification', unique(artworks$classification)),
+      dateRangeInput(
+        'date', 
+        'Date', 
+        start = min(artworks$date_acquired, na.rm = TRUE),
+        end = max(artworks$date_acquired, na.rm = TRUE)
+      )
+    ),
+    mainPanel(
+      plotOutput('plot')
+    )
+  )
+)
+
+server <- function(input, output, session){
+  output$plot <- renderPlot({
+    artworks %>% 
+      filter(!is.na(artist)) %>% 
+      filter(date_acquired >= !!input$date[1]) %>% 
+      filter(date_acquired <= !!input$date[2]) %>% 
+      filter(classification == !!input$classification) %>% 
+      count(artist, sort = TRUE) %>%
+      mutate(artist = forcats::fct_reorder(artist, n)) %>% 
+      head(10) %>% 
+      ggplot(aes(x = artist, y = n)) +
+      geom_col() +
+      coord_flip()    
+  })
+
+}
+shinyApp(ui, server)
+```
+## Heights a
+
+
+```{r}
+artworks %>% 
+  ggplot(aes(x = width_cm)) +
+  geom_histogram() +
+  scale_x_log10()
+```
+

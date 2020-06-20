@@ -1,0 +1,108 @@
+---
+title: Outputs
+---
+
+```{r setup, include = FALSE}
+library(shiny)
+library(tidyverse)
+```
+
+
+## Text
+
+```{r}
+ui <- fluidPage(
+  textOutput('text')
+)
+server <- function(input, output, session){
+  output$text <- renderText({
+    'Hello, World!'
+  })
+}
+shinyApp(ui, server)
+```
+
+## `tableOutput`
+
+![table-output](img/table-output.png)
+
+```{r}
+ui <- fluidPage(
+  titlePanel('Table'),
+  # Display table
+  tableOutput('table')
+)
+server <- function(input, output, session){
+  # Render table
+  output$table <- renderTable({
+    mtcars[1:6, 1:6]
+  })
+}
+shinyApp(ui, server)
+```
+
+## `DTOutput`
+
+![dt-output](img/dt-output.png)
+
+```{r}
+ui <- fluidPage(
+  titlePanel('Table'),
+  # Display interactive table
+  DT::DTOutput('table')
+)
+server <- function(input, output, session){
+  # Render interactive table
+  output$table <- DT::renderDT({
+    mtcars[1:6, 1:6]
+  })
+}
+shinyApp(ui, server)
+```
+
+
+## `plotOutput`
+
+![plot-output](img/plot-output.png)
+
+```{r}
+ui <- fluidPage(
+  titlePanel('Plot'),
+  # Display plot
+  plotOutput('plot')
+)
+server <- function(input, output, session){
+  # Render plot
+  output$plot <- renderPlot({
+    ggplot(mtcars, aes(x = wt, y = mpg)) +
+      geom_point()
+  })
+}
+shinyApp(ui, server)
+```
+
+
+## `plotlyOutput`
+
+![plotly-output](img/plotly-output.png)
+
+```{r}
+library(plotly)
+ui <- fluidPage(
+  titlePanel('Plot'),
+  # Display interactive plot
+  plotlyOutput('plot')
+)
+server <- function(input, output, session){
+  # Render interactive plot
+  output$plot <- renderPlotly({
+    ggplot(mtcars, aes(x = wt, y = mpg)) +
+      geom_point()
+  })
+}
+shinyApp(ui, server)
+```
+
+## HTMLWidgets
+
+http://gallery.htmlwidgets.org/
