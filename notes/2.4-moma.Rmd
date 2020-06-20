@@ -3,8 +3,17 @@ title: MoMa Data
 ---
 
 ```{r setup, include = FALSE}
-library(tidyverse)
+# Load shiny
 library(shiny)
+# Load tidyverse
+library(tidyverse)
+# Define empty server functi
+server <- function(input, output, session) {
+
+}
+if (requireNamespace('rstudioapi', quietly = TRUE)){
+  options(shiny.launch.browser = rstudioapi::viewer)
+}
 ```
 
 

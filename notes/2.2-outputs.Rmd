@@ -3,8 +3,17 @@ title: Outputs
 ---
 
 ```{r setup, include = FALSE}
+# Load shiny
 library(shiny)
+# Load tidyverse
 library(tidyverse)
+# Define empty server functi
+server <- function(input, output, session) {
+
+}
+if (requireNamespace('rstudioapi', quietly = TRUE)){
+  options(shiny.launch.browser = rstudioapi::viewer)
+}
 ```
 
 

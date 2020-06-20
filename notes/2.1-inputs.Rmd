@@ -11,6 +11,9 @@ library(tidyverse)
 server <- function(input, output, session) {
 
 }
+if (requireNamespace('rstudioapi', quietly = TRUE)){
+  options(shiny.launch.browser = rstudioapi::viewer)
+}
 ```
 
 ## Shiny 101
