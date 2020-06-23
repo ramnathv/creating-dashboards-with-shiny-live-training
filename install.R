@@ -1,6 +1,7 @@
 install.packages('shiny')
 install.packages('shinyWidgets')
 install.packages('shinydashboard')
+install.packages('shinythemes')
 install.packages('DT')
 install.packages('plotly')
 install.packages('janitor')
