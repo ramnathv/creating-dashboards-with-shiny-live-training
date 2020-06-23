@@ -15,15 +15,18 @@ if (requireNamespace('rstudioapi', quietly = TRUE)){
 
 ## Shiny 101
 
+![hello-world-app](img/hello-world.gif)
+
 ```{r}
 ui <- fluidPage(
+  titlePanel('Hello World App'),
   # 1. Add a text input to get user name
   textInput('name', label = 'Enter your name'),
-  # 3. Display text output with greeting
+  # 2. Display text output with greeting
   textOutput('greeting')
 )
 server <- function(input, output, session){
-  # 2. Render a text greeting
+  # 3. Render a text greeting
   output$greeting <- renderText({
     paste("Hello,", input$name)
   })
@@ -31,6 +34,17 @@ server <- function(input, output, session){
 shinyApp(ui, server)
 ```
 
+## Inputs
+
+Let's learn about the other kinds of inputs available for you to use in your
+Shiny apps. Shiny provides a variety of inputs to choose from. For example, you
+can use a `sliderInput` to allow users to select a year. A `selectInput` is a
+great way to allow for a selection from a list of fixed options, such as a
+preference for dogs or cats. The `numericalInput` allows you to provide a range
+of numbers users can choose from, which they can increase or decrease using the
+little arrows. A `dateRangeInput` allows you to provide users with a set of
+dates, and a calendar drop down appears when they click so they can select a
+specific one.
 
 ## Text
 
@@ -53,6 +67,21 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+
+
+All input functions have their first argument, an `inputId`, in common. The
+`inputId` needs to be a character string, and each input should have a unique id
+so you can refer to it in the server to make updates to the app.
+
+Many inputs have a `label` as their next argument, which is a character string
+that is often shown to the user to let them know what they should do with the
+input.
+
+From there, each input function has unique arguments that help you successfully
+build the app. A `selectInput` requires a list of choices. The user will
+automatically see the first choice in the list. A `sliderInput` requires value
+that the slider will be set at by default, then a `min` and `max` of the other
+values users can choose from.
 
 ### `textAreaInput`
 
@@ -116,14 +145,80 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-### `checkboxInput`
-### `checkboxGroupInput`
 ### `varSelectInput`
 
+![vars-select-input](img/vars-select-input.gif)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel('Selecting columns from a table'),
+  varSelectInput(
+    inputId = 'cols',
+    label = 'Select Columns',
+    data = mtcars,
+    multiple = TRUE
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+### `checkboxGroupInput`
+
+![check-box-group-input](img/check-box-group-input.png)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel('Check Box Group'),
+  checkboxGroupInput(
+    inputId = 'variables',
+    label = 'Select variables to display',
+    choices = c('cyl', 'am', 'gear')
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
 
 ## Numeric
 
 ### `numericInput`
+
+![numeric-input](img/numeric-input.png)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel('Numeric Input'),
+  numericInput(
+    inputId = 'number',
+    label = 'Select Number',
+    value = 10,
+    min = 0,
+    max = 100
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
 ### `sliderInput`
 
 ![slider](https://assets.datacamp.com/production/repositories/5153/datasets/c4f847add1286acffda14a4880e2a7561e950e68/sliderInput.png)
@@ -150,12 +245,97 @@ shinyApp(ui, server)
 ## Date
 
 ### `dateInput`
+
+![date-input](img/date-input.png)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  dateInput(
+    inputId = "date",
+    label = "Select Date",
+    value = "2020-06-25"
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
 ### `dateRangeInput`
+
+![date-range-input](img/date-range-input.png)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  dateRangeInput(
+    inputId = "date",
+    label = "Select Date",
+    start = "2020-01-01",
+    end = "2020-12-31"
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
 
 ## Boolean
 
 ### `radioButtons`
+
+![radio-button-input](img/radio-button-input.png)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  radioButtons(
+    inputId = 'distribution',
+    label = 'Select Distribution',
+    choices = c(norm = 'Normal', unif = 'Uniform', poisson = 'Poisson')
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+
 ### `checkboxInput`
+
+![check-box-group-input](img/check-box-input.png)
+
+
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  checkboxInput(
+    inputId = 'show_plot',
+    label = 'Show Plot'
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
 
 ## Additional Inputs
 

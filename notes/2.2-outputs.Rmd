@@ -7,23 +7,29 @@ title: Outputs
 library(shiny)
 # Load tidyverse
 library(tidyverse)
-# Define empty server functi
-server <- function(input, output, session) {
-
-}
+# Set option to launch shiny app in viewer
 if (requireNamespace('rstudioapi', quietly = TRUE)){
   options(shiny.launch.browser = rstudioapi::viewer)
 }
 ```
 
+We've covered inputs, but without outputs, inputs aren't yet very useful in 
+your app. Let's learn more about outputs and render functions so you can build 
+a full app.
+
 
 ## Text
 
+![text-output](img/text-output.png)
+
 ```{r}
 ui <- fluidPage(
+  titlePanel("Text Output"),
+  # 2. Display output in UI
   textOutput('text')
 )
 server <- function(input, output, session){
+  # 1. Render output in server
   output$text <- renderText({
     'Hello, World!'
   })
@@ -31,38 +37,44 @@ server <- function(input, output, session){
 shinyApp(ui, server)
 ```
 
-## `tableOutput`
+## Table
+
+### Static
 
 ![table-output](img/table-output.png)
 
+
+
 ```{r}
 ui <- fluidPage(
-  titlePanel('Table'),
-  # Display table
+  titlePanel('Static Table'),
+  # Display table in UI
   tableOutput('table')
 )
+
 server <- function(input, output, session){
-  # Render table
+  # Render table in server
   output$table <- renderTable({
     mtcars[1:6, 1:6]
   })
 }
+
 shinyApp(ui, server)
 ```
 
-## `DTOutput`
+### Interactive
 
 ![dt-output](img/dt-output.png)
 
 ```{r}
 ui <- fluidPage(
-  titlePanel('Table'),
+  titlePanel('Interactive Table'),
   # Display interactive table
-  DT::DTOutput('table')
+  dataTableOutput('table')
 )
 server <- function(input, output, session){
   # Render interactive table
-  output$table <- DT::renderDT({
+  output$table <- renderDataTable({
     mtcars[1:6, 1:6]
   })
 }
@@ -70,7 +82,9 @@ shinyApp(ui, server)
 ```
 
 
-## `plotOutput`
+## Plots
+
+### Static
 
 ![plot-output](img/plot-output.png)
 
@@ -91,7 +105,7 @@ shinyApp(ui, server)
 ```
 
 
-## `plotlyOutput`
+### Interactive
 
 ![plotly-output](img/plotly-output.png)
 
@@ -112,6 +126,54 @@ server <- function(input, output, session){
 shinyApp(ui, server)
 ```
 
+## Generic
+
+![ui-output](img/ui-output.png)
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  uiOutput('ui')
+)
+
+server <- function(input, output, session) {
+  output$ui <- renderUI({
+    tags$div(
+      tags$h2('UI Output'),
+      tags$img(
+        src = "https://c.tadst.com/gfx/750w/sunrise-sunset-sun-calculator.jpg?1",
+        width = '100%'
+      ),
+      tags$p(class = 'lead', "This is a beautiful sunrise!")
+    )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
 ## HTMLWidgets
 
-http://gallery.htmlwidgets.org/
+[HTMLWidgets Gallery](http://gallery.htmlwidgets.org/)
+
+### DyGraphs
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel('DyGraphs'),
+  dygraphs::dygraphOutput('dy_plot')
+)
+
+server <- function(input, output, session) {
+  output$dy_plot <- dygraphs::renderDygraph({
+    dygraphs::dygraph(ldeaths)
+  })
+}
+
+shinyApp(ui, server)
+```
+

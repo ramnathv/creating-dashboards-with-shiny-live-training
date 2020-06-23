@@ -18,6 +18,10 @@ if (requireNamespace('rstudioapi', quietly = TRUE)){
 
 ## Layouts
 
+Let's learn about layout functions that allow inputs and outputs to be visually
+arranged (or "laid" out) in the UI. A well chosen layout makes a Shiny app
+aesthetically more appealing, easier to navigate, and more user-friendly.
+
 ### `sidebarLayout`
 
 ![sidebar-layout](img/sidebar-layout.png)
@@ -68,6 +72,12 @@ shinyApp(ui, server)
 ```
 
 ## Themes
+
+In addition to layouts, the `shinythemes` package allows you to make use of 
+pre-built themes that allow you to change the color scheme and typography of 
+your app. You can use the `themeSelector()` function to experiment with 
+different themes, and then set `theme = shinythemes::shinytheme(theme = '___')`
+to choose a desired theme.
 
 ![theme-selector](img/theme-selector.png)
 
