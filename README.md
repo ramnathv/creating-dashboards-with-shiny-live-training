@@ -1,7 +1,9 @@
 # Creating Dashboards with Shiny
 
-<a href="https://rstudio.cloud/project/1402758"><img src="https://rstudio.cloud/94539adfa2edf8d33c806f481bae6b36.svg" alt="RStudio Cloud" height="25"></a>
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ramnathv/live-webinar-shiny/master?urlpath=rstudio)
+<!-- Badges: Start -->
+<a href="https://rstudio.cloud/project/1402758" target="_blank"><img src="https://rstudio.cloud/94539adfa2edf8d33c806f481bae6b36.svg" alt="RStudio Cloud" height="25"></a>
+<a href="https://mybinder.org/v2/gh/ramnathv/live-webinar-shiny/master?urlpath=rstudio" target="_blank"><img src="https://mybinder.org/badge_logo.svg" alt="Binder" height="25"></a>
+<!-- Badges: End -->
 
 
 ## Slides
