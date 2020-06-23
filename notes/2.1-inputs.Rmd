@@ -7,10 +7,7 @@ title: Inputs
 library(shiny)
 # Load tidyverse
 library(tidyverse)
-# Define empty server functi
-server <- function(input, output, session) {
-
-}
+# Set option to launch shiny app in viewer
 if (requireNamespace('rstudioapi', quietly = TRUE)){
   options(shiny.launch.browser = rstudioapi::viewer)
 }
@@ -49,6 +46,11 @@ ui <- fluidPage(
     label = 'Enter your name'
   )
 )
+
+server <- function(input, output, session) {
+
+}
+
 shinyApp(ui, server)
 ```
 
@@ -64,6 +66,11 @@ ui <- fluidPage(
     label = 'Add your feedback'
   )
 )
+
+server <- function(input, output, session) {
+
+}
+
 shinyApp(ui, server)
 ```
 
@@ -80,6 +87,11 @@ ui <- fluidPage(
     choices = c('cat', 'dog', 'cow')
   )
 )
+
+server <- function(input, output, session) {
+
+}
+
 shinyApp(ui, server)
 ```
 
@@ -96,6 +108,11 @@ ui <- fluidPage(
     multiple = TRUE
   )
 )
+
+server <- function(input, output, session) {
+
+}
+
 shinyApp(ui, server)
 ```
 
