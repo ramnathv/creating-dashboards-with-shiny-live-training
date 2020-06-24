@@ -17,26 +17,6 @@ We've covered inputs, but without outputs, inputs aren't yet very useful in
 your app. Let's learn more about outputs and render functions so you can build 
 a full app.
 
-
-## Text
-
-![text-output](img/text-output.png)
-
-```{r}
-ui <- fluidPage(
-  titlePanel("Text Output"),
-  # 2. Display output in UI
-  textOutput('text')
-)
-server <- function(input, output, session){
-  # 1. Render output in server
-  output$text <- renderText({
-    'Hello, World!'
-  })
-}
-shinyApp(ui, server)
-```
-
 ## Table
 
 ### Static
