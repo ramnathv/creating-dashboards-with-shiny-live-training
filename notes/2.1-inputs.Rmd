@@ -337,14 +337,20 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+## Other Inputs
+
+<!-- Add a screenshot of inputs -->
+
+<!-- Move unused inputs to this section -->
+
 ## Additional Inputs
 
 ```{r}
 shinyWidgets::shinyWidgetsGallery()
 ```
 
+## Key Takeaways
 
-## Reactivity
-
-
-
+1. 
+2. Inputs can be referenced in the server as `input$___`
+3. 
