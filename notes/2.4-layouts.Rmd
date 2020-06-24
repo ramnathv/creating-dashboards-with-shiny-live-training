@@ -7,7 +7,7 @@ title: Layouts & Themes
 library(shiny)
 # Load tidyverse
 library(tidyverse)
-# Define empty server functi
+# Define empty server function
 server <- function(input, output, session) {
 
 }
@@ -54,6 +54,46 @@ ui <- fluidPage(
     )
   )
 )
+shinyApp(ui, server)
+```
+
+
+## Apply Layout
+
+```{r}
+ui <- fluidPage(
+  # Display a title panel with the name of the app
+  titlePanel("Baby Names Explorer"),
+  # Display a text input to get user name
+  sidebarLayout(
+    sidebarPanel(
+      textInput('name', 'Enter Name')
+    ),
+    mainPanel(
+      # Display a plot output of the trends
+      tabsetPanel(
+        tabPanel(plotOutput('plot')),
+        tabPanel(DT::DTOutput('table'))
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  # Render a plot showing trend in name across years
+  output$plot <- renderPlot({
+    babynames %>% 
+      filter(name == !!input$name) %>% 
+      ggplot(aes(x = year, y = n, color = sex)) +
+      geom_line()
+  })
+  # Render an interactive table showing trend in name across years
+  output$table <- DT::renderDT({
+    babynames %>% 
+      filter(name == !!input$name)
+  })
+}
+
 shinyApp(ui, server)
 ```
 

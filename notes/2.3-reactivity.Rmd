@@ -15,6 +15,28 @@ if (requireNamespace('rstudioapi', quietly = TRUE)){
 library(babynames)
 ```
 
+## Input -> Output
+
+![hello-world-app](img/hello-world.gif)
+
+
+```{r}
+ui <- fluidPage(
+  # 0. Display a title panel
+  titlePanel('Hello World App'),
+  # 1. Display a text input to get user name
+  textInput('name', label = 'Enter your name'),
+  # 2. Display a text output with greeting
+  textOutput('greeting')
+)
+server <- function(input, output, session){
+  # 3. Render a text greeting
+  output$greeting <- renderText({
+    paste("Hello,", "World")
+  })
+}
+shinyApp(ui, server)
+```
 
 ## Input -> Output
 
@@ -43,6 +65,10 @@ shinyApp(ui, server)
 
 ## Input -> Outputs
 
+<!--
+What if we want to add a table of ...
+-->
+
 ```{r}
 ui <- fluidPage(
   # Display a title panel with the name of the app
@@ -52,7 +78,7 @@ ui <- fluidPage(
   # Display a plot output of the trends
   plotOutput('plot'),
   # Display an interactive table output of the trends
-  DT::DTOutput('table')
+  dataTableOutput('table')
 )
 
 server <- function(input, output, session) {
@@ -64,7 +90,7 @@ server <- function(input, output, session) {
       geom_line()
   })
   # Render an interactive table showing trend in name across years
-  output$table <- DT::renderDT({
+  output$table <- renderDataTable({
     babynames %>% 
       filter(name == !!input$name)
   })
