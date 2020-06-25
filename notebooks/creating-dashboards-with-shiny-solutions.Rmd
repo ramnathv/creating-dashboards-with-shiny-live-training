@@ -854,7 +854,7 @@ shinyApp(ui, server)
 ### Explore Dataset
 
 ```{r}
-artworks <- readr::read_csv('data/Artworks.csv') %>% 
+artworks <- readr::read_csv('../data/Artworks.csv.gz') %>% 
   janitor::clean_names()
 artworks
 ```

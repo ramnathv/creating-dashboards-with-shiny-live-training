@@ -680,7 +680,7 @@ settle on a theme you like, add the `theme` to the UI.
 ### Explore Dataset
 
 ```{r}
-artworks <- readr::read_csv('../data/Artworks.csv') %>% 
+artworks <- readr::read_csv('../data/Artworks.csv.gz') %>% 
   janitor::clean_names()
 artworks
 ```
