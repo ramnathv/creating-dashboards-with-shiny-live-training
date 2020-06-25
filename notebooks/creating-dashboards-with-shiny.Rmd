@@ -34,7 +34,7 @@ shinyApp(ui, server)
 
 Let us build a Hello World App from scratch
 
-![hello-world](notes/img/hello-world.gif)
+![hello-world](../assets/hello-world.gif)
 
 
 ```{r}
@@ -78,14 +78,14 @@ I would recommend the
 [shiny cheatsheet](https://shiny.rstudio.com/images/shiny-cheatsheet.pdf) to 
 quickly explore different input types.
 
-![all-inputs](notes/img/all-inputs.png)
+![all-inputs](../assets/all-inputs.png)
 
 
 ### Text
 
 ##### `textInput`
 
-![text-input](notes/img/text-input.png)
+![text-input](../assets/text-input.png)
 
 ```{r}
 ui <- fluidPage(
@@ -100,7 +100,7 @@ shinyApp(ui, server)
 
 #### `selectInput`
 
-![select-input-single](notes/img/select-input-single.png)
+![select-input-single](../assets/select-input-single.png)
 
 ```{r}
 ui <- fluidPage(
@@ -116,13 +116,13 @@ shinyApp(ui, server)
 You can allow users to select multiple items by setting `multiple = TRUE`. 
 Modify the app you just created to let the user select multiple items.
 
-![select-input-multiple](notes/img/select-input-multiple.png)
+![select-input-multiple](../assets/select-input-multiple.png)
 
 ### Numeric
 
 #### `numericInput`
 
-![numeric-input](notes/img/numeric-input.png)
+![numeric-input](../assets/numeric-input.png)
 
 ```{r}
 ui <- fluidPage(
@@ -138,7 +138,7 @@ shinyApp(ui, server)
 
 #### `sliderInput`
 
-![slider](notes/img/slider-input.png)
+![slider](../assets/slider-input.png)
 
 
 ```{r}
@@ -156,7 +156,7 @@ shinyApp(ui, server)
 
 #### `dateInput`
 
-![date-input](notes/img/date-input.png)
+![date-input](../assets/date-input.png)
 
 ```{r}
 ui <- fluidPage(
@@ -171,7 +171,7 @@ shinyApp(ui, server)
 
 #### `dateRangeInput`
 
-![date-range-input](notes/img/date-range-input.png)
+![date-range-input](../assets/date-range-input.png)
 
 ```{r}
 ui <- fluidPage(
@@ -195,13 +195,13 @@ Apart from the native input widgets that Shiny provides, there are R packages
 like `shinyWidgets` that extend the input functionality even further. This
 package is definitely one that I would recommend checking out!!
 
-![shinywidgets-gallery](notes/img/shiny-widgets-gallery.png)
+![shinywidgets-gallery](../assets/shiny-widgets-gallery.png)
 
 ```{r}
 shinyWidgets::shinyWidgetsGallery()
 ```
 
-![qa](notes/img/qa.jpg)
+![qa](../assets/qa.jpg)
 
 ## Outputs
 
@@ -209,7 +209,7 @@ We've covered inputs, but without outputs, inputs aren't yet very useful in
 your app. Shiny provides a number of output types out of the box, including, 
 text, plot, table, image, and html.
 
-![cheatsheet-outputs](notes/img/cheatsheet-outputs.png)
+![cheatsheet-outputs](../assets/cheatsheet-outputs.png)
 
 In this section, we will learn how to create outputs, render them, and
 display them in the UI. Adding an output to a shiny app involves four steps:
@@ -233,7 +233,7 @@ head(babynames)
 
 #### Static
 
-![table-output](notes/img/table-output.png)
+![table-output](../assets/table-output.png)
 
 
 
@@ -257,7 +257,7 @@ shinyApp(ui, server)
 
 #### Interactive
 
-![dt-output](notes/img/dt-output.png)
+![dt-output](../assets/dt-output.png)
 
 
 ```{r}
@@ -282,7 +282,7 @@ shinyApp(ui, server)
 
 #### Static
 
-![plot-output](notes/img/plot-output.png)
+![plot-output](../assets/plot-output.png)
 
 ```{r}
 ui <- fluidPage(
@@ -304,7 +304,7 @@ shinyApp(ui, server)
 
 #### Interactive
 
-![plotly-output](notes/img/plotly-output.png)
+![plotly-output](../assets/plotly-output.png)
 
 Copy over the code from the app you previously created and make the plot 
 interactive by using `plotlyOutput` and `renderPlotly()`
@@ -322,7 +322,7 @@ available to build shiny apps. For example, the `dygraphs` package provides
 functionality to display interactive, zoomable plots of time-series data.
 
 
-![output-dygraph](notes/img/dygraph-output.gif)
+![output-dygraph](../assets/dygraph-output.gif)
 
 ```{r}
 ui <- fluidPage(
@@ -360,7 +360,7 @@ access the value entered by the user as `input$name`. This is the simplest form
 of reactivity, where an `output` **reacts** automatically to the change in value
 of an `input`.
 
-![app-baby-names](notes/img/app-baby-names.gif)
+![app-baby-names](../assets/app-baby-names.gif)
 
 
 Copy code for the app you just created and modify it by:
@@ -378,7 +378,7 @@ Great work! Let us now augment the app we just created by adding an interactive
 table of the data being plotted. We will use the `renderDT()` and `DTOutput`
 functions provided by the `DT` package.
 
-![app-baby-names-2](notes/img/app-baby-names-2.png)
+![app-baby-names-2](../assets/app-baby-names-2.png)
 
 Copy code for the app you just created, and add an interactive table with the
 same data as the plot. As a reminder, you can add an interactive table output
@@ -459,7 +459,7 @@ outputs. This can be accomplished using `eventReactive(input$x, {expr})`, which
 delays the execution of the expression computed in `expr` until the input `x` is
 updated.
 
-![delay-actions](notes/img/delay-actions.gif)
+![delay-actions](../assets/delay-actions.gif)
 
 
 Copy the code for the app we just created and make two modifications to it:
@@ -486,7 +486,7 @@ code in `callback` is executed in response to an update to the input `x`. Let us
 now use this function to display a modal dialog with information about the app,
 when a button is clicked.
 
-![triggering-actions](notes/img/triggering-actions.gif)
+![triggering-actions](../assets/triggering-actions.gif)
 
 Copy the code for the app we just created and make two modifications:
 
@@ -512,7 +512,7 @@ aesthetically more appealing, easier to navigate, and more user-friendly.
 
 ### `sidebarLayout`
 
-![sidebar-layout](notes/img/sidebar-layout.png)
+![sidebar-layout](../assets/sidebar-layout.png)
 
 ```{r}
 ui <- fluidPage(
@@ -528,7 +528,7 @@ Let us modify the baby names explorer app we created in the **Reactive
 Expressions** section so that the input is in a side panel and the two outputs
 are in the main panel.
 
-![babynames-sidebar-layout](notes/img/babynames-sidebar-layout.png)
+![babynames-sidebar-layout](../assets/babynames-sidebar-layout.png)
 
 ```{r}
 
@@ -541,7 +541,7 @@ are in the main panel.
 Another useful layout uses a combination of `tabsetPanel()` and `tabPanel()` to
 arrange multiple outputs as tabs.
 
-![tabset-panel](notes/img/tabset-panel.png)
+![tabset-panel](../assets/tabset-panel.png)
 
 
 ```{r}
@@ -562,7 +562,7 @@ ui <- fluidPage(
 Let us use these layout functions to display the plot and table in different
 tabs.
 
-![babynames-tab-layout](notes/img/babynames-tab-layout.png)
+![babynames-tab-layout](../assets/babynames-tab-layout.png)
 
 Copy the code for the app you just created and modify it to display the plot
 and table in different tabs by using `tabsetPanel` and `tabPanel`.
@@ -582,7 +582,7 @@ your app. You can use the `themeSelector()` function to experiment with
 different themes, and then set `theme = shinythemes::shinytheme(theme = '___')`
 to choose a desired theme.
 
-![theme-selector](notes/img/theme-selector.png)
+![theme-selector](../assets/theme-selector.png)
 
 Copy over the code for the app you just created and experiment with
 different themes by adding `shinythemes::themeSelector()` to the UI. Once you
@@ -594,13 +594,13 @@ settle on a theme you like, add the `theme` to the UI.
 
 ```
 
-![qa](notes/img/qa.jpg)
+![qa](../assets/qa.jpg)
 
 
 
 ## Build MoMa App
 
-![app-moma](notes/img/app-moma.gif)
+![app-moma](../assets/app-moma.gif)
 
 ### Explore Dataset
 
@@ -714,4 +714,4 @@ shinyApp(ui, server)
 ```
 
 
-![qa](notes/img/qa.jpg)
+![qa](../assets/qa.jpg)
