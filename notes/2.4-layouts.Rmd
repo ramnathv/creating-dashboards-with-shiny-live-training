@@ -123,19 +123,36 @@ to choose a desired theme.
 
 ```{r}
 ui <- fluidPage(
-  titlePanel('Title'),
-  # Add `themeSelector` from `shinythemes` package
+  titlePanel("Baby Names Explorer"),
   shinythemes::themeSelector(),
   sidebarLayout(
-    sidebarPanel('Sidebar'),
+    sidebarPanel(
+      textInput('name', 'Enter Name')
+    ),
     mainPanel(
       tabsetPanel(
-        tabPanel("Tab 1"),
-        tabPanel("Tab 2")
+        tabPanel('Plot', plotOutput('plot')),
+        tabPanel('Table', DT::DTOutput('table'))
       )
     )
   )
 )
+server <- function(input, output, session) {
+  rval_names <- reactive({
+    user_name <- input$name
+    req(user_name)
+    babynames %>% 
+      filter(name == user_name)
+  })
+  output$plot <- renderPlot({
+    rval_names() %>% 
+      ggplot(aes(x = year, y = n, color = sex)) +
+      geom_line()
+  })
+  output$table <- DT::renderDT({
+    rval_names()
+  })
+}
 shinyApp(ui, server)
 ```
 
