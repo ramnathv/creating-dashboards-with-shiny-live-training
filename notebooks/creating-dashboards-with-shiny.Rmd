@@ -773,7 +773,8 @@ server <- function(input, output, session) {
   # Add a reactive expression to filter artworks
   
   
-  # Render an interactive table of filtered artworks
+  # Render an interactive table of filtered artworks:
+  # Columns to Include: title, artist, thumbnail_url as an image
   
   
   
