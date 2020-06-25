@@ -774,9 +774,9 @@ server <- function(input, output, session) {
   
   
   # Render an interactive table of filtered artworks:
-  # Columns to Include: title, artist, thumbnail_url as an image
+  # Columns to include: title, artist, thumbnail_url as an image
   
-  
+
   
   # Render a plot of top 10 artists
   
