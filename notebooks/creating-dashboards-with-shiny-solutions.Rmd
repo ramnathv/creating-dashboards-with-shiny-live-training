@@ -17,6 +17,63 @@ if (requireNamespace('rstudioapi', quietly = TRUE)){
 }
 ```
 
+
+```{r setup, include = FALSE}
+# Load shiny, DT, and plotly
+library(shiny)
+library(DT)
+library(plotly)
+# Load tidyverse
+library(tidyverse)
+# Set option to launch shiny app in viewer
+if (requireNamespace('rstudioapi', quietly = TRUE)){
+  options(shiny.launch.browser = rstudioapi::viewer)
+}
+```
+
+## Shiny 101
+
+Every Shiny App has a UI and a Server.
+
+```{r}
+ui <- fluidPage(
+  
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+Let us build a Hello World App from scratch
+
+![hello-world](../assets/hello-world.gif)
+
+
+```{r}
+ui <- fluidPage(
+  titlePanel('Hello World App'),
+  textInput('name', 'Enter Name'),
+  textOutput('greeing')
+)
+
+server <- function(input, output, session) {
+  output$greeting <- renderText({
+    paste('Hello,', input$greeting)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Building a shiny app is like assembling lego blocks. There are `input` blocks that let users interact with the app, `output` blocks that respond to the user
+inputs, and `reactivity`, the magical glue that makes all of this possible.
+
+In this section, we will first explore these building blocks in isolation, and 
+the put them together to build some apps.
+
 ## Inputs
 
 
@@ -190,6 +247,10 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+![qa](../assets/qa.jpg)
+
+===============================================================================
+
 ## Outputs
 
 We've covered inputs, but without outputs, inputs aren't yet very useful in 
@@ -325,6 +386,10 @@ shinyApp(ui, server)
 1. Pair your `render___()` and `___Output()` functions correctly.
 2. Ensure that `output$object` is displayed using `___Output('object')`.
 
+![qa](../assets/qa.jpg)
+
+===============================================================================
+
 ## Reactivity
 
 So far we have learned about inputs and outputs. A web app typically customizes
@@ -342,21 +407,27 @@ access the value entered by the user as `input$name`. This is the simplest form
 of reactivity, where an `output` **reacts** automatically to the change in value
 of an `input`.
 
-![app-baby-names](../assets//app-baby-names.gif)
+![app-baby-names](../assets/app-baby-names.gif)
 
+We have already copied code for the app you created in the section on static 
+plots (Outputs > Plots > Static). Modify the code to:
 
+1. Add a `textInput()` to let the user enter a name.
+2. Update the plotting code to filter for the name entered by the user.
 
 ```{r}
 ui <- fluidPage(
   titlePanel('Plot'),
-  plotlyOutput('plot')
+  textInput('name', 'Enter Name'),
+  plotOutput('plot')
 )
 server <- function(input, output, session){
-  output$plot <- renderPlotly({
+  output$plot <- renderPlot({
     user_name <- input$name
     babynames %>% 
       filter(name == user_name) %>% 
-      qplot(x = year, y = n, color = sex, data = ., geom = 'line')
+      ggplot(aes(x = year, y = n, color = sex)) +
+      geom_line()
   })
 }
 shinyApp(ui, server)
@@ -498,7 +569,8 @@ updated.
 
 
 
-Copy the code for the app we just created and make two modifications to it:
+We have already copied the code for the app you just created in the previous 
+section. Modify this app to:
 
 1.  Add an `actionButton()` just below the `textInput`.
 2.  Use `eventReactive()` so `rval_names` only updates when the button is
@@ -585,6 +657,10 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+![qa](../assets/qa.jpg)
+
+===============================================================================
+
 ## Layouts
 
 The final piece in the puzzle before we can start building our dashboard is 
@@ -608,7 +684,12 @@ ui <- fluidPage(
 
 Let us modify the baby names explorer app we created in the **Reactive
 Expressions** section so that the input is in a side panel and the two outputs
-are in the main panel.
+are in the main panel. We have already copied the code for the app you created.
+Modify it to:
+
+1. Wrap inputs and outputs in a `sidebarLayout()`.
+2. Move input to a side panel by wrapping inside `sidebarPanel()`
+3. Move outputs to a main panel by wrapping inside `mainPanel()`
 
 ![babynames-sidebar-layout](../assets//babynames-sidebar-layout.png)
 
@@ -672,8 +753,12 @@ tabs.
 
 ![babynames-tab-layout](../assets//babynames-tab-layout.png)
 
-Copy the code for the app we just created and modify it to display the plot
-and table in different tabs by using `tabsetPanel` and `tabPanel`.
+Copy the code for the app you just created and modify it to display the plot
+and table in different tabs by using `tabsetPanel` and `tabPanel`, just like in
+the example code above.
+
+1. Wrap both outputs in a `tabsetPanel()`.
+2. Wrap each output in a `tabPanel()`.
 
 ```{r}
 ui <- fluidPage(
@@ -719,8 +804,6 @@ to choose a desired theme.
 
 ![theme-selector](../assets//theme-selector.png)
 
-
-
 Copy over the code for the app you just created and experiment with
 different themes by adding `shinythemes::themeSelector()` to the UI. Once you
 settle on a theme you like, add the `theme` to the UI.
@@ -759,6 +842,10 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
+
+![qa](../assets/qa.jpg)
+
+===============================================================================
 
 ## Build MoMa App
 
@@ -930,3 +1017,5 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
+
+![qa](../assets/qa.jpg)

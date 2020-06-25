@@ -62,6 +62,8 @@ inputs, and `reactivity`, the magical glue that makes all of this possible.
 In this section, we will first explore these building blocks in isolation, and 
 the put them together to build some apps.
 
+==============================================================================
+
 ## Inputs
 
 Let's learn about the other kinds of inputs available for you to use in your
@@ -203,6 +205,8 @@ shinyWidgets::shinyWidgetsGallery()
 
 ![qa](../assets/qa.jpg)
 
+===============================================================================
+
 ## Outputs
 
 We've covered inputs, but without outputs, inputs aren't yet very useful in 
@@ -343,6 +347,10 @@ shinyApp(ui, server)
 1. Pair your `render___()` and `___Output()` functions correctly.
 2. Ensure that `output$object` is displayed using `___Output('object')`.
 
+![qa](../assets/qa.jpg)
+
+===============================================================================
+
 ## Reactivity
 
 So far we have learned about inputs and outputs. A web app typically customizes
@@ -363,13 +371,25 @@ of an `input`.
 ![app-baby-names](../assets/app-baby-names.gif)
 
 
-Copy code for the app you just created and modify it by:
+We have already copied code for the app you created in the section on static 
+plots (Outputs > Plots > Static). Modify the code to:
 
 1. Add a `textInput()` to let the user enter a name.
 2. Update the plotting code to filter for the name entered by the user.
 
 ```{r}
-
+ui <- fluidPage(
+  titlePanel('Plot'),
+  plotOutput('plot')
+)
+server <- function(input, output, session){
+  output$plot <- renderPlot({
+    babynames %>% 
+      filter(name == "Richard") %>% 
+      qplot(x = year, y = n, color = sex, data = ., geom = 'line')
+  })
+}
+shinyApp(ui, server)
 ```
 
 ### Keeping it DRY!
@@ -462,7 +482,8 @@ updated.
 ![delay-actions](../assets/delay-actions.gif)
 
 
-Copy the code for the app we just created and make two modifications to it:
+We have already copied the code for the app you created in the section 
+Reactivity > Reactivity 101. Modify this app to:
 
 1.  Add an `actionButton()` just below the `textInput`.
 2.  Use `eventReactive()` so `rval_names` only updates when the button is
@@ -470,9 +491,30 @@ Copy the code for the app we just created and make two modifications to it:
 
 
 ```{r}
+ui <- fluidPage(
+  titlePanel("Baby Names Explorer"),
+  textInput('name', 'Enter Name'),
+  plotOutput('plot'),
+  DT::DTOutput('table')
+)
 
+server <- function(input, output, session) {
+  rval_names <- reactive({
+    user_name <- input$name
+    babynames %>% 
+      filter(name == user_name)
+  })
+  output$plot <- renderPlot({
+    rval_names() %>% 
+      ggplot(aes(x = year, y = n, color = sex)) +
+      geom_line()
+  })
+  output$table <- DT::renderDT({
+    rval_names()
+  })
+}
 
-
+shinyApp(ui, server)
 ```
 
 ### Triggering Actions
@@ -503,6 +545,10 @@ Note that you can display the text "About" in a modal dialog by calling
 
 ```
 
+![qa](../assets/qa.jpg)
+
+===============================================================================
+
 ## Layouts
 
 The final piece in the puzzle before we can start building our dashboard is 
@@ -526,14 +572,39 @@ ui <- fluidPage(
 
 Let us modify the baby names explorer app we created in the **Reactive
 Expressions** section so that the input is in a side panel and the two outputs
-are in the main panel.
+are in the main panel. We have already copied the code for the app you created.
+Modify it to:
+
+1. Wrap inputs and outputs in a `sidebarLayout()`.
+2. Move input to a side panel by wrapping inside `sidebarPanel()`
+3. Move outputs to a main panel by wrapping inside `mainPanel()`
 
 ![babynames-sidebar-layout](../assets/babynames-sidebar-layout.png)
 
 ```{r}
+ui <- fluidPage(
+  titlePanel("Baby Names Explorer"),
+  textInput('name', 'Enter Name'),
+  plotOutput('plot'),
+  DT::DTOutput('table')
+)
 
-
-
+server <- function(input, output, session) {
+  rval_names <- reactive({
+    user_name <- input$name
+    babynames %>% 
+      filter(name == user_name)
+  })
+  output$plot <- renderPlot({
+    rval_names() %>% 
+      ggplot(aes(x = year, y = n, color = sex)) +
+      geom_line()
+  })
+  output$table <- DT::renderDT({
+    rval_names()
+  })
+}
+shinyApp(ui, server)
 ```
 
 ### `tabsetPanel`
@@ -565,7 +636,11 @@ tabs.
 ![babynames-tab-layout](../assets/babynames-tab-layout.png)
 
 Copy the code for the app you just created and modify it to display the plot
-and table in different tabs by using `tabsetPanel` and `tabPanel`.
+and table in different tabs by using `tabsetPanel` and `tabPanel`, just like in
+the example code above.
+
+1. Wrap both outputs in a `tabsetPanel()`.
+2. Wrap each output in a `tabPanel()`.
 
 ```{r}
 
@@ -605,7 +680,7 @@ settle on a theme you like, add the `theme` to the UI.
 ### Explore Dataset
 
 ```{r}
-artworks <- readr::read_csv('data/Artworks.csv') %>% 
+artworks <- readr::read_csv('../data/Artworks.csv') %>% 
   janitor::clean_names()
 artworks
 ```
@@ -654,6 +729,7 @@ artworks_subset %>%
     y = 'Height'
   )
 ```
+
 #### Distribution of Heights and Widths by Classification: Rectangle Plot
 
 ```{r}
