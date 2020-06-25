@@ -3,7 +3,6 @@ title: Creating Dashboards with Shiny
 author: Ramnath Vaidyanathan
 ---
 
-
 ```{r setup, include = FALSE}
 # Load shiny, DT, and plotly
 library(shiny)
@@ -17,8 +16,53 @@ if (requireNamespace('rstudioapi', quietly = TRUE)){
 }
 ```
 
-## Inputs
+## Shiny 101
 
+Every Shiny App has a UI and a Server.
+
+```{r}
+ui <- fluidPage(
+  
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+Let us build a Hello World App from scratch
+
+![hello-world](notes/img/hello-world.gif)
+
+
+```{r}
+ui <- fluidPage(
+  # 1. Add a `titlePanel()` to display title
+
+  # 2. Add a `textInput()` to let user enter name
+
+  # 3. Add `textOutput()` to display greeting
+
+)
+
+server <- function(input, output, session) {
+  # 4. Render text output using `renderText()` and
+  # 5. Assign it to output greeting
+
+}
+
+shinyApp(ui, server)
+```
+
+Building a shiny app is like assembling lego blocks. There are `input` blocks that let users interact with the app, `output` blocks that respond to the user
+inputs, and `reactivity`, the magical glue that makes all of this possible.
+
+In this section, we will first explore these building blocks in isolation, and 
+the put them together to build some apps.
+
+## Inputs
 
 Let's learn about the other kinds of inputs available for you to use in your
 Shiny apps. Shiny provides a variety of inputs to choose from. For example, you
@@ -156,6 +200,8 @@ package is definitely one that I would recommend checking out!!
 ```{r}
 shinyWidgets::shinyWidgetsGallery()
 ```
+
+![qa](notes/img/qa.jpg)
 
 ## Outputs
 
@@ -548,6 +594,10 @@ settle on a theme you like, add the `theme` to the UI.
 
 ```
 
+![qa](notes/img/qa.jpg)
+
+
+
 ## Build MoMa App
 
 ![app-moma](notes/img/app-moma.gif)
@@ -663,3 +713,5 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+
+![qa](notes/img/qa.jpg)
