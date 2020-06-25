@@ -5,8 +5,10 @@ author: Ramnath Vaidyanathan
 
 
 ```{r setup, include = FALSE}
-# Load shiny
+# Load shiny, DT, and plotly
 library(shiny)
+library(DT)
+library(plotly)
 # Load tidyverse
 library(tidyverse)
 # Set option to launch shiny app in viewer
@@ -26,7 +28,14 @@ preference for dogs or cats. The `numericalInput` allows you to provide a range
 of numbers users can choose from, which they can increase or decrease using the
 little arrows. A `dateRangeInput` allows you to provide users with a set of
 dates, and a calendar drop down appears when they click so they can select a
-specific one.
+specific one. 
+
+I would recommend the 
+[shiny cheatsheet](https://shiny.rstudio.com/images/shiny-cheatsheet.pdf) to 
+quickly explore different input types.
+
+![all-inputs](notes/img/all-inputs.png)
+
 
 ### Text
 
@@ -60,20 +69,10 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-You can allow users to select multiple items by setting `multiple = TRUE`
+You can allow users to select multiple items by setting `multiple = TRUE`. 
+Modify the app you just created to let the user select multiple items.
 
 ![select-input-multiple](notes/img/select-input-multiple.png)
-```{r}
-ui <- fluidPage(
-  # Add a select input to choose multiple animals from cat, dog and cow
-
-)
-server <- function(input, output, session) {
-
-}
-shinyApp(ui, server)
-```
-
 
 ### Numeric
 
@@ -85,9 +84,7 @@ shinyApp(ui, server)
 ui <- fluidPage(
   # Add a numeric input to let user pick a number from 0 to 10
   
-  
 )
-
 server <- function(input, output, session) {
   
 }
@@ -97,7 +94,7 @@ shinyApp(ui, server)
 
 #### `sliderInput`
 
-![slider](https://assets.datacamp.com/production/repositories/5153/datasets/c4f847add1286acffda14a4880e2a7561e950e68/sliderInput.png)
+![slider](notes/img/slider-input.png)
 
 
 ```{r}
@@ -134,7 +131,6 @@ shinyApp(ui, server)
 
 ```{r}
 ui <- fluidPage(
-  # Add a date range input to let user select two dates between 2000 and 2020
   dateRangeInput(
     inputId = "date",
     label = "Select Date",
@@ -148,22 +144,52 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+
+### ShinyWidgets
+
+Apart from the native input widgets that Shiny provides, there are R packages 
+like `shinyWidgets` that extend the input functionality even further. This
+package is definitely one that I would recommend checking out!!
+
+![shinywidgets-gallery](notes/img/shiny-widgets-gallery.png)
+
+```{r}
+shinyWidgets::shinyWidgetsGallery()
+```
+
 ## Outputs
 
 We've covered inputs, but without outputs, inputs aren't yet very useful in 
-your app. Let's learn more about outputs and render functions so you can build 
-a full app. Adding an output to a shiny app involves four steps:
+your app. Shiny provides a number of output types out of the box, including, 
+text, plot, table, image, and html.
+
+![cheatsheet-outputs](notes/img/cheatsheet-outputs.png)
+
+In this section, we will learn how to create outputs, render them, and
+display them in the UI. Adding an output to a shiny app involves four steps:
 
 1. [Server] Write code to create the output.
 2. [Server] Render the output using a `render___()` function. 
 3. [Server] Assign the rendered output to the `output` object.
 4. [UI] Display it in the UI using a `___Output()` function.
 
+We will follow these steps systematically to add plot and table outputs. The
+logic to add other output types is very similar. We will be using the
+`babynames` dataset that tracks the number of children with a specific name,
+born every year.
+
+```{r}
+library(babynames)
+head(babynames)
+```
+
 ### Table
 
 #### Static
 
 ![table-output](notes/img/table-output.png)
+
+
 
 ```{r}
 ui <- fluidPage(
@@ -176,7 +202,7 @@ server <- function(input, output, session){
   # 2. Render table using `renderTable()` and 
   # 3. Assign it to `output$table`
   
-    # 1. Write code to display first six rows and six columns of mtcars dataset
+  # 1. Write code to output first six rows of the babynames dataset
  
 }
 
@@ -187,17 +213,18 @@ shinyApp(ui, server)
 
 ![dt-output](notes/img/dt-output.png)
 
+
 ```{r}
 ui <- fluidPage(
-  titlePanel('Interactive Table')
-  # 4. Display interactive table using `dataTableOutput()`
+  # 4. Display interactive table using `DTOutput()`
 
 )
 server <- function(input, output, session){
-  # 2. Render interactive table using `renderDataTable()` and 
+  # 1. Write code to output all rows of the babynames dataset,
+  # 2. Render interactive table using `renderDT()`, and 
   # 3. Assign it to `output$table`
 
-    # 1. Write code to display first six rows and six columns of mtcars dataset
+
 
 
 }
@@ -213,15 +240,15 @@ shinyApp(ui, server)
 
 ```{r}
 ui <- fluidPage(
-  titlePanel('Plot')
   # 4. Display plot using `plotOutput()`
   
 )
 server <- function(input, output, session){
+  # 1. Write code to create a line plot of n vs year colored by sex for name Richard
   # 2. Render plot using `renderPlot()` and 
   # 3. Assign it to `output$plot`
 
-    # 1. Write code to create a scatterplot of mpg vs. wt in mtcars dataset.
+  
 
 
 }
@@ -240,11 +267,6 @@ interactive by using `plotlyOutput` and `renderPlotly()`
 library(plotly)
 
 ```
-
-
-### Others
-
-![cheatsheet-outputs](notes/img/cheatsheet-outputs.png)
 
 
 ### HTMLWidgets
@@ -283,71 +305,43 @@ reactivity, the magic behind everything in shiny!
 
 ### Reactivity 101
 
-Let us revisit the hello-world app. Currently it is set up to display
-"Hello, World" no matter what name the user displays. In order to make
-the output react to the input, we need to replace "World" with `input$name`.
-This is the simplest form of reactivity, where an `output` __reacts__ 
-automatically to the change in value of an `input`.
+Let us revisit the app we just created. Currently it is set up to display a
+trend plot of the name "Richard". It would be great if we could have the output
+plot **react** to a name entered by the user.
 
-![hello-world-app](notes/img/hello-world.gif)
-
-
-```{r}
-ui <- fluidPage(
-  titlePanel('Hello World App'),
-  textInput('name', label = 'Enter your name'),
-  textOutput('greeting')
-)
-server <- function(input, output, session){
-  output$greeting <- renderText({
-    # Modify this line to display the name of the user in place of World.
-    paste("Hello,", "World")
-  })
-}
-shinyApp(ui, server)
-```
-
-
-### One Input -> One Output
-
-```{r}
-library(babynames)
-head(babynames)
-```
+If we add a `textInput()` with `inputId = "name"`, then we will be able to
+access the value entered by the user as `input$name`. This is the simplest form
+of reactivity, where an `output` **reacts** automatically to the change in value
+of an `input`.
 
 ![app-baby-names](notes/img/app-baby-names.gif)
 
+
+Copy code for the app you just created and modify it by:
+
+1. Add a `textInput()` to let the user enter a name.
+2. Update the plotting code to filter for the name entered by the user.
+
 ```{r}
-ui <- fluidPage(
-  # Display a title panel with the name of the app
-  titlePanel("Baby Names Explorer")
-  # Display a text input to get user name
 
-  # Display a plot output of the trends
-
-)
-server <- function(input, output, session) {
-  # Render a plot showing trend in name across years and
-  # Assign it to an output
- 
-    # Write code to create a line plot of year vs. n colored by sex
-
-
-}
-shinyApp(ui, server)
 ```
 
-### One Input -> Two Outputs
+### Keeping it DRY!
 
-Let us augment the app we just created by adding an interactive table
-of the data being plotted. We will make use of the `DT` package that 
-provides a `renderDT()` function to render interactive tables and a
-`DTOutput` function to display them.
+Great work! Let us now augment the app we just created by adding an interactive
+table of the data being plotted. We will use the `renderDT()` and `DTOutput`
+functions provided by the `DT` package.
 
 ![app-baby-names-2](notes/img/app-baby-names-2.png)
 
-Copy code for the app we just created, and add an interactive table with the
-same data as the plot.
+Copy code for the app you just created, and add an interactive table with the
+same data as the plot. As a reminder, you can add an interactive table output
+by:
+
+1.  Writing code to create the output.
+2.  Render the output as a table using `renderDT({})`
+3.  Assign the rendered output to `output$table`
+4.  Display the output in the UI using `DTOutput()`.
 
 ```{r}
 
@@ -360,16 +354,27 @@ a shiny app!
 
 ### Reactive Expressions
 
-In the app we just created, note how we are filtering the `babynames`  dataset
-twice, once to create the plot, and once again to create the table. If this 
-were a computationally expensive operation, then it would slow down the 
+In the app we just created, note how we are filtering the `babynames` dataset
+twice, once to create the plot, and once again to create the table. If this were
+a computationally expensive operation, then it would slow down the
 responsiveness of our app. How do we ensure that we keep computations DRY?
 
-The answer to this question is to use reactive values and expressions. Let us start with reactive expressions. It is easy to create a reactive expression `rval`, by simply wrapping your computation inside the function `reactive()`, 
-and access its value by calling `rval()`.
+The answer to this question is to use reactive expressions. It is easy to create
+a reactive expression `rval`, by simply wrapping your computations inside the
+function `reactive()`, and access its value by calling `rval()`.
 
-Copy the code for the app we just created and create a reactive expression 
-named `rval_names` to hold the filtered data.
+```r
+rval <- reactive({
+  # COMPUTATIONS
+})
+```
+
+Let us refactor the app we just created, by moving the filtering of data into
+a reactive expression. Copy the code for the app you just created and make two
+modifications.
+
+1. Create a reactive expression named `rval_names` to compute the filtered data.
+2. Access the filtered data in the outputs as `rval_names()`.
 
 ```{r}
 
@@ -377,41 +382,45 @@ named `rval_names` to hold the filtered data.
 
 ```
 
-Note how an empty plot and table appears at the outset when we have not yet entered a name. This happens because `input$name` is NULL at the outset, and
-hence both the plot and table outputs receive an empty data frame. One way
-to prevent empty outputs from appearing is to use the `req()`  function and
-pass it the set of inputs for which we don't want to display any output unless
-it has a non-null value. How about we try it out?
+Reactive expressions allow encapsulation of repeated computations leading to
+better performance. A reactive expression can depend on inputs as well as other
+reactive expressions, and updates its value in response to its dependencies.
+There are two significant advantages of using reactive expressions:
 
-Reactive expressions allow encapsulation of repeated computations leading 
-to better performance. A reactive expression can depend on inputs as well
-as other reactive expressions, and updates its value in response to its
-dependencies. There are two significant advantages of using reactive
-expressions:
-
-1. They are executed lazily. For example, if we have a shiny app with 
-   different tabs, then only those reactive expressions that are called by
-   an output on the visible tab get executed.
-2. They are cached. Hence, expensive computations only get executed once,
-   providing a significant 
+1.  They are executed lazily. For example, if we have a shiny app with different
+    tabs, then only those reactive expressions that are called by an output on
+    the visible tab get executed.
    
+2.  They are cached. Hence, expensive computations only get executed once,
+    providing a significant
+
+As an aside, did you notice how an empty plot and table appear at the outset
+when we have not yet entered a name. This happens because `input$name` is NULL
+at the outset, and hence both the plot and table outputs receive an empty data
+frame.
+
+One way to prevent empty outputs from appearing is to use the `req()` function
+and pass it the set of inputs for which we don't want to display any output
+unless it has a non-null value. How about we try it out?
+
 ### Delaying Actions
 
-So far you have seen how reactivity can automatically trigger changes in
-outputs based on changes to inputs. Sometimes, it is desirable to delay
-actions. For example, we might want to click on an update button in order
-to update the outputs. 
+So far you have seen how reactivity automatically triggers changes in outputs
+based on changes to inputs. Sometimes, it is desirable to delay actions.
 
-This can be accomplished using `eventReactive(input$x, {expr})`, which delays 
-the execution of the expression computed in `expr` until the input `x` is 
+For example, we might want to click on an update button in order to update the
+outputs. This can be accomplished using `eventReactive(input$x, {expr})`, which
+delays the execution of the expression computed in `expr` until the input `x` is
 updated.
 
 ![delay-actions](notes/img/delay-actions.gif)
 
-⚽ Copy the code for the app we just created and make two modifications to it:
 
-1. Add an `actionButton()` just below the `textInput`.
-2. Use `eventReactive()` so `rval_names` only updates when the button is clicked.
+Copy the code for the app we just created and make two modifications to it:
+
+1.  Add an `actionButton()` just below the `textInput`.
+2.  Use `eventReactive()` so `rval_names` only updates when the button is
+    clicked.
 
 
 ```{r}
@@ -422,13 +431,14 @@ updated.
 
 ### Triggering Actions
 
-At times, we might want to manually trigger an action in response to an
-event. This should be very familiar to those of you who have used javascript frameworks like `jQuery`. 
+At times, we might want to manually trigger an action in response to an event.
+This should be very familiar to those of you who have used javascript frameworks
+like `jQuery`.
 
 This can be accomplished using `observeEvent(input$x, {callback})`, where the
-code in `callback` is executed in response to an update to the input `x`. Let
-us now use this function to display a modal dialog with information about the 
-app, when a button is clicked.
+code in `callback` is executed in response to an update to the input `x`. Let us
+now use this function to display a modal dialog with information about the app,
+when a button is clicked.
 
 ![triggering-actions](notes/img/triggering-actions.gif)
 
@@ -449,7 +459,8 @@ Note that you can display the text "About" in a modal dialog by calling
 
 ## Layouts
 
-The final piece in the puzzle before we can start building our dashboard is layouts. These are functions that allow inputs and outputs to be visually
+The final piece in the puzzle before we can start building our dashboard is 
+layouts. These are functions that allow inputs and outputs to be visually
 arranged (or "laid" out) in the UI. A well chosen layout makes a Shiny app
 aesthetically more appealing, easier to navigate, and more user-friendly.
 
@@ -467,7 +478,8 @@ ui <- fluidPage(
 )
 ```
 
-Let us modify the baby names explorer app we created in the __Reactive Expressions__ section so that the input is in a side panel and the two outputs 
+Let us modify the baby names explorer app we created in the **Reactive
+Expressions** section so that the input is in a side panel and the two outputs
 are in the main panel.
 
 ![babynames-sidebar-layout](notes/img/babynames-sidebar-layout.png)
@@ -506,7 +518,7 @@ tabs.
 
 ![babynames-tab-layout](notes/img/babynames-tab-layout.png)
 
-Copy the code for the app we just created and modify it to display the plot
+Copy the code for the app you just created and modify it to display the plot
 and table in different tabs by using `tabsetPanel` and `tabPanel`.
 
 ```{r}
@@ -514,3 +526,25 @@ and table in different tabs by using `tabsetPanel` and `tabPanel`.
 
 
 ```
+
+
+### Themes
+
+In addition to layouts, the `shinythemes` package allows you to make use of 
+pre-built themes that allow you to change the color scheme and typography of 
+your app. You can use the `themeSelector()` function to experiment with 
+different themes, and then set `theme = shinythemes::shinytheme(theme = '___')`
+to choose a desired theme.
+
+![theme-selector](notes/img/theme-selector.png)
+
+Copy over the code for the app you just created and experiment with
+different themes by adding `shinythemes::themeSelector()` to the UI. Once you
+settle on a theme you like, add the `theme` to the UI.
+
+```{r}
+
+
+
+```
+
