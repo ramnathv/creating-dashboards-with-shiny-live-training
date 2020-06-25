@@ -759,3 +759,174 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
+
+## Build MoMa App
+
+![app-moma](notes/img/app-moma.gif)
+
+### Explore Dataset
+
+```{r}
+artworks <- readr::read_csv('data/Artworks.csv') %>% 
+  janitor::clean_names()
+artworks
+```
+
+### Prototype Outputs
+
+#### Artworks Acquired by Date Range and Classification
+
+```{r}
+artworks_subset <- artworks %>% 
+ filter(!is.na(artist)) %>% 
+ filter(date_acquired >= '2010-01-01') %>% 
+ filter(date_acquired <= '2020-01-01') %>% 
+ filter(classification == 'Painting')
+
+artworks_subset
+```
+
+#### Top 10 Artists by Classification
+
+```{r}
+artworks_subset %>% 
+  count(artist, sort = TRUE) %>%
+  mutate(artist = forcats::fct_reorder(artist, n)) %>% 
+  head(10) %>% 
+  ggplot(aes(x = n, y = artist)) +
+  geom_col() +
+  labs(
+    title = 'Top 10 Artists',
+    subtitle = 'Painting',
+    x = 'Number of Artworks',
+    y = 'Artist'
+  )
+```
+
+#### Distribution of Heights and Widths by Classification
+
+```{r}
+artworks_subset %>% 
+  ggplot(aes(x = width_cm, y = height_cm)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Distribution of Width and Heights",
+    subtitle = 'Painting',
+    x = 'Width',
+    y = 'Height'
+  )
+```
+#### Distribution of Heights and Widths by Classification: Rectangle Plot
+
+```{r}
+artworks_subset %>% 
+  ggplot(aes(xmin = 0, ymin = 0, xmax = width_cm, ymax = height_cm)) +
+  geom_rect(alpha = 0.5) +
+  labs(
+    title = 'Distribution of Width vs. Height',
+    subtitle = 'Painting',
+    x = 'Width',
+    y = 'Height'
+  )
+```
+
+### Build App
+
+```{r}
+ui <- fluidPage(
+  titlePanel("Explore MoMA Artworks"),
+  # Set theme to "sandstone"
+  theme = shinythemes::shinytheme("sandstone"),
+  sidebarLayout(
+    sidebarPanel(
+      # Add select input to select classification
+      selectInput(
+        inputId = 'group', 
+        label = 'Select classification', 
+        choices = unique(artworks$classification), 
+        selected = 'Painting'
+      ),
+      # Add date range input to select date range
+      dateRangeInput(
+        inputId = 'date_range', 
+        label = 'Select dates', 
+        start = '2010-01-01', 
+        end = '2020-01-01'
+      )
+    ),
+    mainPanel(
+      tabsetPanel(
+        # Add tabPanel with an interactive table of filtered artworks
+        tabPanel("Artworks", p(), 
+          DTOutput('dt_artworks', height = 600)
+        ),
+        # Add tabPanel with a plot of top 10 artists
+        tabPanel("Top Artists", p(), 
+          plotOutput('plot_top_artists', height = 600)
+        ),
+        # Add tabPanel with a plot of width vs. height
+        tabPanel("Dimensions of Artworks", p(), 
+          plotlyOutput('plotly_artwork_dimensions', height = 600)
+        )
+      )
+    )
+  )
+  
+)
+server <- function(input, output, session) {
+  # Add a reactive expression to filter artworks
+  rval_artworks <- reactive({
+    group <- input$group
+    date_range <- input$date_range
+    artworks %>% 
+     filter(!is.na(artist)) %>% 
+     filter(date_acquired >= date_range[1]) %>% 
+     filter(date_acquired <= date_range[2]) %>% 
+     filter(classification == group)
+  })
+  
+  # Render an interactive table of filtered artworks
+  output$dt_artworks <- renderDT({
+    rval_artworks() %>% 
+      filter(thumbnail_url != "") %>% 
+      select(title, artist, thumbnail_url) %>% 
+      mutate(thumbnail_url = sprintf("<img src='%s' height=40/>", thumbnail_url)) %>% 
+      DT::datatable(escape = FALSE, style = 'bootstrap')
+  })
+  
+  
+  # Render a plot of top 10 artists
+  output$plot_top_artists <- renderPlot({
+    rval_artworks() %>% 
+      count(artist, sort = TRUE) %>%
+      mutate(artist = forcats::fct_reorder(artist, n)) %>% 
+      head(10) %>% 
+      ggplot(aes(x = n, y = artist)) +
+      geom_col() +
+      labs(
+        title = 'Top 10 Artists',
+        subtitle = 'Painting',
+        x = 'Number of Artworks',
+        y = 'Artist'
+      )
+  })
+  
+  
+  # Render an interactive plot of width vs. height
+  output$plotly_artwork_dimensions <- renderPlotly({
+    rval_artworks() %>% 
+      ggplot(aes(x = width_cm, y = height_cm, tooltip = title)) +
+      geom_point(alpha = 0.5) +
+      labs(
+        title = "Distribution of Width and Heights",
+        subtitle = 'Painting',
+        x = 'Width',
+        y = 'Height'
+      )
+  })
+  
+  
+  
+}
+shinyApp(ui, server)
+```

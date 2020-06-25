@@ -548,3 +548,118 @@ settle on a theme you like, add the `theme` to the UI.
 
 ```
 
+## Build MoMa App
+
+![app-moma](notes/img/app-moma.gif)
+
+### Explore Dataset
+
+```{r}
+artworks <- readr::read_csv('data/Artworks.csv') %>% 
+  janitor::clean_names()
+artworks
+```
+
+### Prototype Outputs
+
+#### Artworks Acquired by Date Range and Classification
+
+```{r}
+artworks_subset <- artworks %>% 
+ filter(!is.na(artist)) %>% 
+ filter(date_acquired >= '2010-01-01') %>% 
+ filter(date_acquired <= '2020-01-01') %>% 
+ filter(classification == 'Painting')
+
+artworks_subset
+```
+
+#### Top 10 Artists by Classification
+
+```{r}
+artworks_subset %>% 
+  count(artist, sort = TRUE) %>%
+  mutate(artist = forcats::fct_reorder(artist, n)) %>% 
+  head(10) %>% 
+  ggplot(aes(x = n, y = artist)) +
+  geom_col() +
+  labs(
+    title = 'Top 10 Artists',
+    subtitle = 'Painting',
+    x = 'Number of Artworks',
+    y = 'Artist'
+  )
+```
+
+#### Distribution of Heights and Widths by Classification
+
+```{r}
+artworks_subset %>% 
+  ggplot(aes(x = width_cm, y = height_cm)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Distribution of Width and Heights",
+    subtitle = 'Painting',
+    x = 'Width',
+    y = 'Height'
+  )
+```
+#### Distribution of Heights and Widths by Classification: Rectangle Plot
+
+```{r}
+artworks_subset %>% 
+  ggplot(aes(xmin = 0, ymin = 0, xmax = width_cm, ymax = height_cm)) +
+  geom_rect(alpha = 0.5) +
+  labs(
+    title = 'Distribution of Width vs. Height',
+    subtitle = 'Painting',
+    x = 'Width',
+    y = 'Height'
+  )
+```
+
+### Build App
+
+```{r}
+ui <- fluidPage(
+  titlePanel("Explore MoMA Artworks"),
+  sidebarLayout(
+    sidebarPanel(
+      # Add select input to select classification
+      
+      # Add date range input to select date range
+      
+    ),
+    mainPanel(
+      tabsetPanel(
+        # Add tabPanel with an interactive table of filtered artworks
+        
+        # Add tabPanel with a plot of top 10 artists
+        
+        # Add tabPanel with a plot of width vs. height
+
+      )
+    )
+  )
+  
+)
+server <- function(input, output, session) {
+  # Add a reactive expression to filter artworks
+  
+  
+  # Render an interactive table of filtered artworks
+  
+  
+  
+  # Render a plot of top 10 artists
+  
+  
+  
+  # Render an interactive plot of width vs. height
+  
+  
+  
+}
+shinyApp(ui, server)
+```
+
